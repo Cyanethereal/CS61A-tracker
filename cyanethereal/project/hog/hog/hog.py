@@ -2,7 +2,7 @@
 
 from dice import six_sided, make_test_dice
 from ucb import main, trace, interact
-
+import random
 GOAL = 100  # The goal of Hog is to score 100 points.
 
 ######################
@@ -22,7 +22,31 @@ def roll_dice(num_rolls, dice=six_sided):
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    # results = []
+    # result = 0
+    # 
+    # for _ in range(1, num_rolls+1):
+    #     results.append(dice())
+
+    # for x in results:
+    #     if x == 1:
+    #         return 1
+    #     else:
+    #         result += x
+    # return result
+    # 
+    # first try
+
+    total = 0
+    has_one = False
+    for _ in range(num_rolls):  # ✅ 调用 num_rolls 次
+        outcome = dice()
+        total += outcome
+        if outcome == 1:
+            has_one = True  # 仅标记，不中断循环
+    return 1 if has_one else total
     # END PROBLEM 1
+
 
 
 def boar_brawl(player_score, opponent_score):

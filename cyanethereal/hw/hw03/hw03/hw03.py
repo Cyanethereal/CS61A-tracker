@@ -25,6 +25,12 @@ def num_eights(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n == 0:
+        return 0
+    elif n % 10 == 8:
+        return 1 + num_eights(n // 10)
+    else:
+        return num_eights(n // 10)
 
 
 def digit_distance(n):
@@ -47,6 +53,10 @@ def digit_distance(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n // 10 == 0:
+        return 0
+    else:
+        return abs(n % 100 // 10 - n % 10) + digit_distance(n // 10)
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -71,6 +81,23 @@ def interleaved_sum(n, odd_func, even_func):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(k):
+        # k is always odd when this is called
+        if k > n:
+            return 0
+        # Apply odd_func to the odd number k
+        odd_part = odd_func(k)
+        # The next number (k+1) is even
+        if k + 1 <= n:
+            # Apply even_func to the even number k+1
+            even_part = even_func(k + 1)
+            # Recurse with k+2 (the next odd number)
+            return odd_part + even_part + helper(k + 2)
+        else:
+            # No even number after this odd number
+            return odd_part
+
+    return helper(1)
 
 
 def next_smaller_dollar(bill):
@@ -108,6 +135,25 @@ def count_dollars(total):
     """
     "*** YOUR CODE HERE ***"
 
+    def helper(total, bill):
+        # Base case: if total is 0, we've found a valid way
+        if total == 0:
+            return 1
+        # Base case: if total is negative or no more bills available
+        if total < 0 or bill is None:
+            return 0
+
+        # Two choices:
+        # 1. Use the current bill: subtract it from total, keep same bill
+        # 2. Don't use the current bill: move to next smaller bill
+        use_bill = helper(total - bill, bill)
+        skip_bill = helper(total, next_smaller_dollar(bill))
+
+        return use_bill + skip_bill
+
+    # Start with the largest bill (100)
+    return helper(total, 100)
+
 
 def next_larger_dollar(bill):
     """Returns the next larger bill in order."""
@@ -144,6 +190,26 @@ def count_dollars_upward(total):
     """
     "*** YOUR CODE HERE ***"
 
+    def helper(total, bill):
+        # Base case: if total is 0, we've found a valid way
+        if total == 0:
+            return 1
+        # Base case: if total is negative or no more bills available
+        if total < 0 or bill is None:
+            return 0
+
+        # Two choices:
+        # 1. Use the current bill: subtract it from total, keep same bill
+        # 2. Don't use the current bill: move to next larger bill
+        use_bill = helper(total - bill, bill)
+        skip_bill = helper(total, next_larger_dollar(bill))
+
+        return use_bill + skip_bill
+
+        # Start with the smallest bill (1)
+
+    return helper(total, 1)
+
 
 def print_move(origin, destination):
     """Print instructions to move a disk."""
@@ -178,6 +244,20 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        print_move(start, end)
+    else:
+        # Determine the auxiliary rod (the one that's neither start nor end)
+        auxiliary = 6 - start - end  # Since 1+2+3 = 6, this gives us the third rod
+
+        # Step 1: Move n-1 disks from start to auxiliary rod
+        move_stack(n - 1, start, auxiliary)
+
+        # Step 2: Move the largest disk from start to end
+        print_move(start, end)
+
+        # Step 3: Move n-1 disks from auxiliary to end rod
+        move_stack(n - 1, auxiliary, end)
 
 
 from operator import sub, mul

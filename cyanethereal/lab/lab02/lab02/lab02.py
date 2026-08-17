@@ -14,6 +14,12 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
+    def identity(x):
+        if f(g(x)) == g(f(x)):
+            return True
+        else:
+            return False
+    return identity
 
 
 def sum_digits(y):
@@ -60,7 +66,13 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
-
+    def do_count_cond(n):
+        count = 0
+        for i in range(1, n + 1):
+            if condition(n, i):
+                count += 1
+        return count
+    return do_count_cond
 
 def multiple(a, b):
     """Return the smallest number n that is a multiple of both a and b.
@@ -71,6 +83,11 @@ def multiple(a, b):
     42
     """
     "*** YOUR CODE HERE ***"
+    def gcd(a, b):
+        if a == 0:
+            return b
+        return gcd(b, a % b)
+    return a * b // gcd(a, b)
 
 
 
@@ -101,4 +118,12 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
-
+    def ret_fn(n):
+        def apply_to(x):
+            # 按循环顺序，执行前 n 个函数
+            funcs = [f1, f2, f3]
+            for i in range(n):
+                x = funcs[i % 3](x)  # i%3 实现循环：0->f1, 1->f2, 2->f3, 3->f1...
+            return x
+        return apply_to
+    return ret_fn
